@@ -14,6 +14,7 @@ button2.addEventListener("click", processBtn2);
 
 function processBtn2() {
     csInterface.evalScript('functionB()', function (result) {
+        document.querySelector('#txtResult').value = result;
         // alert(result);
     });
 }

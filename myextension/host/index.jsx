@@ -4,7 +4,8 @@ function functionA() {
 }
 
 function functionB() {
-    eval("@JSXBIN@ES@2.0@MyBbyBnABMAbyBn0ABJBnAEjzFjBjMjFjSjUBfRBFeTiNjJjTjTjJjPjOhAjDjPjNjQjMjFjUjFhBhBhBff0DzMjSjVjOiGjVjOjDjUjJjPjOiCCACBJEnAEjzPjDjBjMjMiCjBjDjLiGjVjDjUjJjPjODfRBjCfff0DzAEByB");
+    return getOSUUID();
+    // eval("@JSXBIN@ES@2.0@MyBbyBnABMAbyBn0ABJBnAEjzFjBjMjFjSjUBfRBFeTiNjJjTjTjJjPjOhAjDjPjNjQjMjFjUjFhBhBhBff0DzMjSjVjOiGjVjOjDjUjJjPjOiCCACBJEnAEjzPjDjBjMjMiCjBjDjLiGjVjDjUjJjPjODfRBjCfff0DzAEByB");
 }
 
 // function runFunctionB() {
@@ -58,14 +59,14 @@ function callBackFuction(functionName) {
 
 function requestAPI() {
     try {
-        var macAddress = getMacAddress();
+        var uuid = getOSUUID();
         var licenseKey = getLicenseKey();
         // alert(licenseKey);
         if (licenseKey === null || licenseKey === "") {
             return "-2#Require License Key!";
         }
         var host = "14.232.208.178:2111";
-        var api = host + "/api/license?mac=" + macAddress + "&key=" + licenseKey;
+        var api = host + "/api/license?uuid=" + uuid + "&key=" + licenseKey;
         var reply = "";
         var conn = new Socket();
         if (conn.open(host, "binary")) {
@@ -130,31 +131,42 @@ function getLicenseKey() {
     return result;
 }
 
-function getMacAddress() {
-    var macAddress = "";
+function isMacOS() {
+    return ($.os.toLowerCase().indexOf('mac') >= 0);
+}
+
+function getOSUUID() {
+    var uuid = "";
     var tempFile = new File(Folder.temp + "/temp.txt");
-    var command = 'ipconfig /all';
+    var command = "";
+    var isMacOS = isMacOS();
+    if (isMacOS) {
+        command = 'uuidgen';
+    } else {
+        command = 'wmic csproduct get "UUID"';
+    }
+    alert(command);
     app.system(command + " > " + tempFile.fsName);
     if (tempFile.open("r")) {
         var txtLine = "";
-        var txtLines = [];
+        var line = isMacOS ? 1 : 2;
+        var i = 1;
         while (!tempFile.eof) {
-            txtLine = tempFile.readln().replace(" ", "").replace(".", "");
-            if(txtLine !== "") {
-                txtLines = txtLine.split(':')
-                if(txtLines.length === 2 && txtLines[0] === "PhysicalAddress") {
-                    macAddress = txtLines[1];
-                    break;
-                }
+            txtLine = tempFile.readln();
+            if(i === line) {
+                uuid = txtLine;
+                break;
             }
+            i++;
         };
         tempFile.close();
-        tempFile.remove();
+        // tempFile.remove();
     }
-    if (macAddress !== "") {
-        macAddress = macAddress.split(':')[1].replace(' ', '');
-    }
-    return macAddress;
+    return uuid;
+}
+
+function getUserName() {
+    return (isMacOS()) ? $.getenv("USER") : $.getenv("USERNAME");
 }
 
 //#endregion
