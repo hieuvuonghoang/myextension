@@ -26,8 +26,8 @@
                     <!-- 4) -->
                     <MainPath>./client/index.html</MainPath>
                     <!-- 5) -->
-                    <ScriptPath>./host/index_encode.jsx</ScriptPath>
-                    <!-- <ScriptPath>./host/index.jsx</ScriptPath> -->
+                    <!-- <ScriptPath>./host/index_encode.jsx</ScriptPath> -->
+                    <ScriptPath>./host/index.jsx</ScriptPath>
                     <CEFCommandLine>
                         <Parameter>--enable-nodejs</Parameter>
                         <Parameter>--mixed-context</Parameter>

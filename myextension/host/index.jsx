@@ -1,21 +1,27 @@
 
 function functionA() {
-    return callBackFuction(runFunctionA);
+    eval("@JSXBIN@ES@2.0@MyBbyBnABMAbyBn0ABJBnAEjzFjBjMjFjSjUBfRBFeLiYjJjOhAjDjInAjPhBhBhBff0DzMjSjVjOiGjVjOjDjUjJjPjOiBCACBJEnAEjzPjDjBjMjMiCjBjDjLiGjVjDjUjJjPjODfRBjCfff0DzAEByB");
 }
 
 function functionB() {
-    return callBackFuction(runFunctionB);
+    eval("@JSXBIN@ES@2.0@MyBbyBnABMAbyBn0ABJBnAEjzFjBjMjFjSjUBfRBFeTiNjJjTjTjJjPjOhAjDjPjNjQjMjFjUjFhBhBhBff0DzMjSjVjOiGjVjOjDjUjJjPjOiCCACBJEnAEjzPjDjBjMjMiCjBjDjLiGjVjDjUjJjPjODfRBjCfff0DzAEByB");
 }
 
-function runFunctionB() {
-    alert('Mission complete!!!');
-}
+// function runFunctionB() {
+//     alert('Mission complete!!!');
+// }
 
-function runFunctionA() {
-    alert('Xin chào!!!');
-}
+// callBackFuction(runFunctionB);
 
-function  callBackFuction(functionName) {
+// function runFunctionA() {
+//     alert('Xin chào!!!');
+// }
+
+// callBackFuction(runFunctionA);
+
+//#region Check License
+
+function callBackFuction(functionName) {
     var ret = "";
     var results = requestAPI().split('#');
     if (results[0] === "0") {
@@ -58,7 +64,7 @@ function requestAPI() {
         if (licenseKey === null || licenseKey === "") {
             return "-2#Require License Key!";
         }
-        var host = "localhost:3000";
+        var host = "14.232.208.178:2111";
         var api = host + "/api/license?mac=" + macAddress + "&key=" + licenseKey;
         var reply = "";
         var conn = new Socket();
@@ -147,3 +153,5 @@ function getMacAddress() {
     }
     return macAddress;
 }
+
+//#endregion

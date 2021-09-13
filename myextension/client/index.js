@@ -5,7 +5,7 @@ button1.addEventListener("click", processBtn1);
 
 function processBtn1() {
     csInterface.evalScript('functionA()', function (result) {
-        alert(result);
+        // alert(result);
     });
 }
 
@@ -14,6 +14,6 @@ button2.addEventListener("click", processBtn2);
 
 function processBtn2() {
     csInterface.evalScript('functionB()', function (result) {
-        alert(result);
+        // alert(result);
     });
 }
