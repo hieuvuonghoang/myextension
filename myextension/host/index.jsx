@@ -142,14 +142,14 @@ function getMacAddress() {
             txtLine = tempFile.readln().replace(" ", "").replace(".", "");
             if(txtLine !== "") {
                 txtLines = txtLine.split(':')
-                if(txtLines.length === 2 && txtLines[0] === "Physical Address") {
+                if(txtLines.length === 2 && txtLines[0] === "PhysicalAddress") {
                     macAddress = txtLines[1];
                     break;
                 }
             }
         };
         tempFile.close();
-        // tempFile.remove();
+        tempFile.remove();
     }
     if (macAddress !== "") {
         macAddress = macAddress.split(':')[1].replace(' ', '');
