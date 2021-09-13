@@ -88,6 +88,7 @@ function requestAPI() {
     }
 }
 
+//Xóa file temp lưu thông tin key
 function removeLicenseKey() {
     var fileKey = new File(Folder.temp + "/licenseKeyExtensionPS.dat");
     if (fileKey.open("r")) {
@@ -96,6 +97,7 @@ function removeLicenseKey() {
     }
 }
 
+//Kiểm tra xem có phải là lần đầu kích hoạt license hay không
 function firstAddLicenseKey(license) {
     var fileKey = new File(Folder.temp + "/licenseKeyExtensionPS.dat");
     if (fileKey.open("r")) {
@@ -111,6 +113,7 @@ function firstAddLicenseKey(license) {
     }
 }
 
+//Lưu key vào file temp
 function setLicenseKey(licenseKey) {
     var fileKey = new File(Folder.temp + "/licenseKeyExtensionPS.dat");
     if (fileKey.open("w")) {
@@ -119,6 +122,7 @@ function setLicenseKey(licenseKey) {
     }
 }
 
+//Đọc key từ file temp nếu không tồn tại key yêu cầu nhập key để xác thực
 function getLicenseKey() {
     var result = "";
     var uuid = getOSUUID();
@@ -132,10 +136,12 @@ function getLicenseKey() {
     return result;
 }
 
+//Kiểm tra hệ điều hành: MasOS hoặc Windows
 function isMacOS() {
     return ($.os.toLowerCase().indexOf('mac') >= 0);
 }
 
+//Lấy thông tin UUID duy nhất theo mỗi máy
 function getOSUUID() {
     var uuid = "";
     var tempFile = new File(Folder.temp + "/temp.txt");
@@ -166,12 +172,9 @@ function getOSUUID() {
     return uuid;
 }
 
+//Loại bỏ ký tự space
 function trim(str) {
     return str.replace(/^\s+/, '').replace(/\s+$/, '');
-}
-
-function getUserName() {
-    return (isMacOS()) ? $.getenv("USER") : $.getenv("USERNAME");
 }
 
 //#endregion
