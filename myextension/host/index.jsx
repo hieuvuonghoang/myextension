@@ -137,13 +137,16 @@ function getMacAddress() {
     app.system(command + " > " + tempFile.fsName);
     if (tempFile.open("r")) {
         var txtLine = "";
-        var i = 0;
+        var txtLines = [];
         while (!tempFile.eof) {
-            txtLine = tempFile.readln();
-            if(txtLine.includes("Physical Address")) {
-                macAddress = txtLine;
+            txtLine = tempFile.readln().replace(" ", "").replace(".", "");
+            if(txtLine !== "") {
+                txtLines = txtLine.split(':')
+                if(txtLines.length === 2 && txtLines[0] === "Physical Address") {
+                    macAddress = txtLines[1];
+                    break;
+                }
             }
-            i++;
         };
         tempFile.close();
         // tempFile.remove();
