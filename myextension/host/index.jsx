@@ -140,13 +140,13 @@ function getMacAddress() {
         var i = 0;
         while (!tempFile.eof) {
             txtLine = tempFile.readln();
-            if (i === 14) {
+            if(txtLine.includes("Physical Address")) {
                 macAddress = txtLine;
             }
             i++;
         };
         tempFile.close();
-        tempFile.remove();
+        // tempFile.remove();
     }
     if (macAddress !== "") {
         macAddress = macAddress.split(':')[1].replace(' ', '');
