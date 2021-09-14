@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './admin/admin.component';
 import { LoginComponent } from './login/login.component';
+import { ManagerLicenseDetailComponent } from './manager-license/manager-license-detail/manager-license-detail.component';
 import { ManagerLicenseComponent } from './manager-license/manager-license/manager-license.component';
 import { ManagerUserComponent } from './manager-user/manager-user.component';
 
@@ -29,6 +30,13 @@ const routes: Routes = [
         }
       },
       {
+        path: 'manager-license-detail/:id',
+        component: ManagerLicenseDetailComponent,
+        data: {
+          animation: 'ManagerLicenseDetail',
+        }
+      },
+      {
         path: '',
         component: ManagerLicenseComponent,
         data: {
@@ -53,6 +61,13 @@ const routes: Routes = [
         component: ManagerUserComponent,
         data: {
           animation: 'ManagerUser',
+        }
+      },
+      {
+        path: 'manager-license-detail/:id',
+        component: ManagerLicenseDetailComponent,
+        data: {
+          animation: 'ManagerLicenseDetail',
         }
       },
       {

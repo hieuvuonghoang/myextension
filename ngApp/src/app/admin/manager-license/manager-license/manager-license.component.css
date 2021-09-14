@@ -15,3 +15,12 @@ td button {
 .form-check-input {
   margin-left: 0;
 }
+
+a {
+  cursor: pointer;
+}
+
+.active {
+  background-color: #007bff!important;
+  color: white;
+}

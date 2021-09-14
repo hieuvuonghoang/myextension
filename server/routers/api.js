@@ -60,15 +60,47 @@ function getUserIDFromReq(req) {
 //#region License
 
 router.get('/license', verifyToken, function (req, res) {
-    db.License.find({}, function (err, docLicenses) {
-        if (err) {
-            res.json({
-                error: err.message
-            });
-        } else {
-            res.json(docLicenses);
+    try {
+        let page = req.query.page ? parseInt(req.query.page, 10) : 1;
+        if (!page) {
+            page = 1;
         }
-    });
+        let pageLength = req.query.pageLength ? parseInt(req.query.pageLength, 10) : 10;
+        if (!pageLength) {
+            pageLength = 10;
+        }
+        let field = req.query.field;
+        if (!field) {
+            field = '';
+        }
+        let sort = req.query.sort ? parseInt(req.query.sort, 10) : 1;
+        if (!sort) {
+            sort = 1;
+        }
+        let optionSort = {};
+        if (field !== '') {
+            optionSort[field] = sort;
+        }
+        db.License.countDocuments({}, function (err, count) {
+            db.License
+                .find({}, function (err, docLicenses) {
+                    if (err) {
+                        res.json({
+                            error: err.message
+                        });
+                    } else {
+                        res.json({count: count, docLicenses: docLicenses});
+                    }
+                })
+                .skip((page - 1) * pageLength)
+                .limit(pageLength)
+                .sort(optionSort);
+        })
+    } catch (ex) {
+        res.json({
+            error: ex.message
+        });
+    }
 })
 
 router.get('/license/:id', verifyToken, function (req, res) {
@@ -139,13 +171,13 @@ router.put('/license/:id', verifyToken, function (req, res) {
     }
 })
 
-router.delete('/license/:id', verifyToken, function(req, res) {
+router.delete('/license/:id', verifyToken, function (req, res) {
     db.License.findByIdAndRemove(req.params.id, (err, docLicense) => {
-        if(err) {
+        if (err) {
             res.json({
                 error: err.message
             });
-        }else {
+        } else {
             res.json(docLicense);
         }
     })

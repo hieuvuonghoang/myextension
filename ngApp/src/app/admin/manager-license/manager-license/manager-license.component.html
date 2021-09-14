@@ -9,16 +9,16 @@
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <table class="table table-sm table-hover">
+            <table class="table table-bordered table-sm table-hover">
               <thead>
                 <tr>
                   <th style="width: 10px">#</th>
                   <!-- <th>Email</th> -->
-                  <th>Phone</th>
-                  <th>UUID</th>
-                  <th>License Key</th>
-                  <th>Is Active</th>
-                  <th style="width: 50px"></th>
+                  <th class="text-center">Phone</th>
+                  <th class="text-center">UUID</th>
+                  <th class="text-center">License Key</th>
+                  <th class="text-center">Is Active</th>
+                  <th class="text-center"></th>
                 </tr>
               </thead>
               <tbody>
@@ -29,18 +29,17 @@
                   <td>{{license.uuid}}</td>
                   <td>{{license.licensekey}}</td>
                   <td class="text-center">
-                    <input disabled class="form-check-input"type="checkbox"
-                      [checked]="license.isactive === 'Y'">
+                    <input disabled class="form-check-input" type="checkbox" [checked]="license.isactive === 'Y'">
                   </td>
-                  <td class="text-center" style="display: inline-flex;">
-                    <button type="button" class="btn bg-gradient-primary btn-xs">
+                  <td class="text-center" style="width: 250px">
+                    <button (click)="edit(license)" type="button" class="btn bg-gradient-primary btn-xs">
                       <i class="fas fa-edit"><span>Edit</span></i>
                     </button>
-                    <button type="button" class="btn bg-gradient-warning btn-xs">
+                    <button (click)="lockOrUnlock(license)" type="button" class="btn bg-gradient-warning btn-xs">
                       <i *ngIf="license.isactive === 'Y'" class="fas fa-lock"><span>Lock</span></i>
                       <i *ngIf="license.isactive !== 'Y'" class="fas fa-unlock"><span>Un Lock</span></i>
                     </button>
-                    <button type="button" class="btn bg-gradient-danger btn-xs">
+                    <button (click)="delete(license)" type="button" class="btn bg-gradient-danger btn-xs">
                       <i class="fas fa-trash"><span>Delete</span></i>
                     </button>
                   </td>
@@ -50,12 +49,13 @@
           </div>
           <!-- /.card-body -->
           <div class="card-footer clearfix">
-            <ul class="pagination pagination-sm m-0 float-right">
-              <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-              <li class="page-item"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+            <ul *ngIf="paginations.length !== 0" class="pagination pagination-sm m-0 float-right">
+              <li (click)="changePage(-1)" class="page-item"><a class="page-link">&laquo;</a></li>
+              <div *ngFor="let pagination of paginations; let i = index">
+                <li class="page-item"><a (click)="onSelectPage(pagination)" class="page-link"
+                    [class.active]="indexPage === i">{{pagination}}</a></li>
+              </div>
+              <li (click)="changePage(+1)" class="page-item"><a class="page-link">&raquo;</a></li>
             </ul>
           </div>
         </div>
@@ -67,3 +67,11 @@
   </div><!-- /.container-fluid -->
 </section>
 <!-- /.content -->
+<script>
+  var Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+  });
+</script>

@@ -15,11 +15,11 @@ export class LicenseService {
     private http: HttpClient
   ) { }
 
-  getLicense(id?: string): Observable<any[]> {
+  getLicense(page?: number, pageLength?: number, field?: string, sort?: number, id?: string): Observable<any> {
     if (id) {
-      return this.http.get<any[]>(`${this._apiUrl}/${id}`);
+      return this.http.get<any>(`${this._apiUrl}/${id}`);
     } else {
-      return this.http.get<any[]>(this._apiUrl);
+      return this.http.get<any>(this._apiUrl + `?page=${page}&pageLength=${pageLength}&field=${field}&sort=${sort}`);
     }
   }
 

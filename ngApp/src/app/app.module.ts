@@ -19,7 +19,7 @@ import { TokenInterceptorService } from './services/token-interceptor.service';
     AdminModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
   ],
   providers: [AuthService, {
     provide: HTTP_INTERCEPTORS,
