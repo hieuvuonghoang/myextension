@@ -1,0 +1,17 @@
+i span {
+  padding-left: 5px;
+  font-weight: normal;
+}
+
+td button {
+  margin-right: 10px;
+}
+
+.bg-gradient-warning {
+  color: white;
+  min-width: 80px !important;
+}
+
+.form-check-input {
+  margin-left: 0;
+}

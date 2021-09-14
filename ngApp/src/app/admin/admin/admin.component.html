@@ -1,0 +1,20 @@
+<div class="wrapper">
+  <app-navigation></app-navigation>
+
+  <app-main-sidebar></app-main-sidebar>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <app-bread-crumb></app-bread-crumb>
+      <div [@routeAnimations]="prepareRoute(outlet)">
+        <router-outlet #outlet="outlet"></router-outlet>
+      </div>
+    </section>
+  </div>
+  <!-- /.content-wrapper -->
+
+  <app-main-footer></app-main-footer>
+</div>
+<!-- ./wrapper -->
