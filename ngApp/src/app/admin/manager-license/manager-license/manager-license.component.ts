@@ -4,6 +4,7 @@ import { LicenseService } from 'src/app/services/license.service';
 import { Utilitys } from 'src/app/utilitys/utilitys';
 import { Router, ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
+import { ShareDataService } from 'src/app/services/share-data.service';
 
 @Component({
   selector: 'app-manager-license',
@@ -24,7 +25,8 @@ export class ManagerLicenseComponent implements OnInit {
   constructor(
     private licenseService: LicenseService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private shareDataService: ShareDataService,
   ) { }
 
   ngOnInit(): void {
@@ -35,23 +37,6 @@ export class ManagerLicenseComponent implements OnInit {
         this.field = params.get('field') ? params.get('field')! : '';
         this.sort = params.get('sort') ? parseInt(params.get('sort')!, 10) : 0;
         this.getLicences();
-        // this.licenseService.getLicense(this.page, this.pageLength, this.field, this.sort).subscribe(
-        //   docs => {
-        //     this.pageCount = Math.floor(docs.count / this.pageLength);
-        //     if ((docs.count % this.pageLength) !== 0) {
-        //       this.pageCount += 1;
-        //     }
-        //     this.paginations = Utilitys.pagination(this.page, this.pageCount);
-        //     this.getIndexCurrentPage();
-        //     let license: License;
-        //     this.licenses = [];
-        //     for (let i = 0; i < docs.docLicenses.length; i++) {
-        //       license = new License({ ...docs.docLicenses[i] });
-        //       this.licenses.push(license);
-        //     }
-        //     console.log(this.licenses);
-        //   }
-        // );
       }
     )
 
@@ -104,13 +89,12 @@ export class ManagerLicenseComponent implements OnInit {
   lockOrUnlock(license: License) {
     let licenseTmp = new License({ ...JSON.parse(JSON.stringify(license)) });
     let mes = "";
-    if (licenseTmp.isactive === 'Y') {
-      licenseTmp.isactive = 'N';
+    if (!licenseTmp.isactive) {
       mes = "Vô hiệu hóa license thành công!";
     } else {
-      licenseTmp.isactive = 'Y';
       mes = "Kích hoạt license thành công!";
     }
+    licenseTmp.isactive = !licenseTmp.isactive;
     this.licenseService.putLicense(licenseTmp)
       .subscribe(
         data => {
@@ -131,6 +115,7 @@ export class ManagerLicenseComponent implements OnInit {
   }
 
   edit(license: License) {
+    this.shareDataService.previousURL.next(this.router.url);
     this.router.navigate(['manager-license-detail', license._id]);
   }
 
@@ -175,6 +160,10 @@ export class ManagerLicenseComponent implements OnInit {
         // )
       }
     })
+  }
+
+  createNew() {
+    this.router.navigate(['/manager-license-detail', ""]);
   }
 
 }

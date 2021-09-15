@@ -1,4 +1,15 @@
 export class Utilitys {
+
+    static getCurrentDateStr(date: Date) {
+        let result = "";
+        try {
+            result = date.toLocaleDateString("en-US", { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+        } catch (ex) {
+
+        }
+        return result;
+    }
+
     static pagination(c: number, m: number) {
         let current = c,
             last = m,

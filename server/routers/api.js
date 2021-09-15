@@ -230,7 +230,7 @@ router.post('/login', (req, res) => {
 
 //#endregion
 
-router.get('/license', function (req, res) {
+router.get('/check-license', function (req, res) {
     let mac = req.query.mac;
     let key = req.query.key;
     console.log(mac);

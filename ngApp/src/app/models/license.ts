@@ -4,11 +4,12 @@ export class License {
     public email: string = "";
     public uuid: string = "";
     public licensekey: string = "";
-    public fromdate: Date | undefined;
-    public todate: Date | undefined;
-    public isactive: string = "";
-    public createdate: Date | undefined;
+    public fromdate: string = "";
+    public todate: string = "";
+    public isactive: boolean = false;
     constructor(init?: Partial<License>) {
         Object.assign(this, init);
     }
+
+    
 }

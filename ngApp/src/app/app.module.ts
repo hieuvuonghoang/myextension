@@ -10,6 +10,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 import { TokenInterceptorService } from './services/token-interceptor.service';
 
+import { FormsModule } from '@angular/forms';
+
 @NgModule({
   declarations: [
     AppComponent
@@ -17,6 +19,7 @@ import { TokenInterceptorService } from './services/token-interceptor.service';
   imports: [
     BrowserModule,
     AdminModule,
+    FormsModule,
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,

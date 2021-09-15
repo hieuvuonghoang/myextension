@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable, throwError } from 'rxjs';
 import { License } from '../models/license';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -15,16 +16,28 @@ export class LicenseService {
     private http: HttpClient
   ) { }
 
-  getLicense(page?: number, pageLength?: number, field?: string, sort?: number, id?: string): Observable<any> {
-    if (id) {
-      return this.http.get<any>(`${this._apiUrl}/${id}`);
-    } else {
-      return this.http.get<any>(this._apiUrl + `?page=${page}&pageLength=${pageLength}&field=${field}&sort=${sort}`);
-    }
+  getLicense(page?: number, pageLength?: number, field?: string, sort?: number): Observable<any> {
+    return this.http.get<any>(this._apiUrl + `?page=${page}&pageLength=${pageLength}&field=${field}&sort=${sort}`)
+      .pipe(
+        map(data => {
+          console.log(data);
+          if (data.docLicenses) {
+            for (let i = 0; i < data.docLicenses.length; i++) {
+              data.docLicenses[i].isactive = data.docLicenses[i].isactive === 'true' ? true : false;
+            }
+          }
+          return data;
+        })
+      )
   }
 
-  errorHandler(error: HttpErrorResponse) {
-    return throwError(error.message);
+  getLicenseID(id: string): Observable<any> {
+    return this.http.get<any>(this._apiUrl + `/${id}`).pipe(
+      map(data => {
+        data.isactive = data.isactive === 'true' ? true : false;
+        return data;
+      })
+    )
   }
 
   putLicense(license: License): Observable<any> {
@@ -39,8 +52,5 @@ export class LicenseService {
     return this.http.post<any>(this._apiUrl, license);
   }
 
-}
-function catchError(errorHandler: any): import("rxjs").OperatorFunction<any, any> {
-  throw new Error('Function not implemented.');
 }
 

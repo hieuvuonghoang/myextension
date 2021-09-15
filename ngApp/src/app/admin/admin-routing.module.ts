@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CanDeactivateGuard } from '../guard/can-deactivate.guard';
+import { ManagerLicenseDetailResolverService } from '../resolvers/manager-license-detail-resolver.service';
 import { AdminComponent } from './admin/admin.component';
 import { LoginComponent } from './login/login.component';
 import { ManagerLicenseDetailComponent } from './manager-license/manager-license-detail/manager-license-detail.component';
 import { ManagerLicenseComponent } from './manager-license/manager-license/manager-license.component';
 import { ManagerUserComponent } from './manager-user/manager-user.component';
+import { CanActivateGuard } from '../guard/can-activate.guard';
 
 const routes: Routes = [
   {
@@ -14,6 +17,7 @@ const routes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
+    canActivate: [CanActivateGuard],
     children: [
       {
         path: 'manager-license',
@@ -34,7 +38,11 @@ const routes: Routes = [
         component: ManagerLicenseDetailComponent,
         data: {
           animation: 'ManagerLicenseDetail',
-        }
+        },
+        resolve: {
+          license: ManagerLicenseDetailResolverService,
+        },
+        canDeactivate: [CanDeactivateGuard]
       },
       {
         path: '',
@@ -48,6 +56,7 @@ const routes: Routes = [
   {
     path: '',
     component: AdminComponent,
+    canActivate: [CanActivateGuard],
     children: [
       {
         path: 'manager-license',
@@ -68,7 +77,11 @@ const routes: Routes = [
         component: ManagerLicenseDetailComponent,
         data: {
           animation: 'ManagerLicenseDetail',
-        }
+        },
+        resolve: {
+          license: ManagerLicenseDetailResolverService,
+        },
+        canDeactivate: [CanDeactivateGuard]
       },
       {
         path: '',
