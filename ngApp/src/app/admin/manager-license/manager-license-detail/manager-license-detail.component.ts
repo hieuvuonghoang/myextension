@@ -7,14 +7,12 @@ import { Observable } from 'rxjs';
 import { DialogService } from 'src/app/services/dialog.service';
 import { ShareDataService } from 'src/app/services/share-data.service';
 
-declare var $: any;
-
 @Component({
   selector: 'app-manager-license-detail',
   templateUrl: './manager-license-detail.component.html',
   styleUrls: ['./manager-license-detail.component.css']
 })
-export class ManagerLicenseDetailComponent implements OnInit, AfterViewInit {
+export class ManagerLicenseDetailComponent implements OnInit {
 
   licenseRoot!: License;
   license!: License;
@@ -36,11 +34,6 @@ export class ManagerLicenseDetailComponent implements OnInit, AfterViewInit {
   ) {
   }
 
-  ngAfterViewInit(): void {
-    $('#fromdatepicker').datetimepicker({ icons: { time: 'far fa-clock' } });
-    $('#todatepicker').datetimepicker({ icons: { time: 'far fa-clock' } });
-  }
-
   ngOnInit(): void {
     this.shareDataSevice.previousURL.subscribe(
       data => {
@@ -51,7 +44,6 @@ export class ManagerLicenseDetailComponent implements OnInit, AfterViewInit {
       .subscribe(data => {
         this.licenseRoot = new License({ ...data.license });
         this.license = new License({ ...data.license });
-        // this.license.isactive = false;
       });
   }
 
@@ -61,7 +53,7 @@ export class ManagerLicenseDetailComponent implements OnInit, AfterViewInit {
 
   submit() {
     if (JSON.stringify(this.license) !== JSON.stringify(this.licenseRoot)) {
-      if(this.license._id === "") {
+      if (this.license._id === "") {
         this.insert();
       } else {
         this.update();
