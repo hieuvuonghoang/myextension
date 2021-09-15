@@ -5,14 +5,14 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Bordered Table</h3>
+            <h3 class="card-title">Danh sách license</h3>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
             <div class="row">
               <button (click)="createNew()" type="button" class="btn btn-default">
                 <i class="fa fa-plus"></i>
-                Create new
+                Thêm mới
               </button>
             </div>
             <div class="row">
@@ -20,18 +20,16 @@
                 <thead>
                   <tr>
                     <th style="width: 10px">#</th>
-                    <!-- <th>Email</th> -->
-                    <th class="text-center">Phone</th>
+                    <th class="text-center">Số điện thoại</th>
                     <th class="text-center">UUID</th>
                     <th class="text-center">License Key</th>
-                    <th class="text-center">Is Active</th>
-                    <th class="text-center"></th>
+                    <th class="text-center">Đang hoạt động</th>
+                    <th class="text-center">Hành động</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let license of licenses; let i = index">
+                  <tr *ngFor="let license of licenses; let i = index" [@flyInOut]="'in'">
                     <td>{{i + 1}}.</td>
-                    <!-- <td>{{license.email}}</td> -->
                     <td>{{license.phone}}</td>
                     <td>{{license.uuid}}</td>
                     <td>{{license.licensekey}}</td>
@@ -40,14 +38,14 @@
                     </td>
                     <td class="text-center" style="width: 250px">
                       <button (click)="edit(license)" type="button" class="btn bg-gradient-primary btn-xs">
-                        <i class="fas fa-edit"><span>Edit</span></i>
+                        <i class="fas fa-edit"><span>Chỉnh sửa</span></i>
                       </button>
                       <button (click)="lockOrUnlock(license)" type="button" class="btn bg-gradient-warning btn-xs">
-                        <i *ngIf="license.isactive" class="fas fa-lock"><span>Lock</span></i>
-                        <i *ngIf="!license.isactive" class="fas fa-unlock"><span>Un Lock</span></i>
+                        <i *ngIf="license.isactive" class="fas fa-lock"><span>Khóa</span></i>
+                        <i *ngIf="!license.isactive" class="fas fa-unlock"><span>Mở khóa</span></i>
                       </button>
                       <button (click)="delete(license)" type="button" class="btn bg-gradient-danger btn-xs">
-                        <i class="fas fa-trash"><span>Delete</span></i>
+                        <i class="fas fa-trash"><span>Xóa</span></i>
                       </button>
                     </td>
                   </tr>

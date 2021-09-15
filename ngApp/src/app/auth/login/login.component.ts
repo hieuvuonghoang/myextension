@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -9,9 +10,16 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
 
   loginUserData = {
-    email: 'admin@gmail.com.vn',
-    pass: 'admin',
+    email: '',
+    pass: '',
   }
+
+  Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+  });
 
   constructor(
     private auth: AuthService,
@@ -21,14 +29,21 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  loginUser() {
+  onSubmit() {
     this.auth.loginUser(this.loginUserData)
       .subscribe(
-        res => {
-          localStorage.setItem('token', res.token)
-          this.router.navigate([''])
+        data => {
+          if (data.error) {
+            this.Toast.fire({
+              icon: 'error',
+              title: data.error,
+            })
+          } else {
+            localStorage.setItem('token', data.token)
+            this.router.navigate([''])
+          }
         },
-        err => console.log(err)
+        err => console.error(err)
       )
   }
 

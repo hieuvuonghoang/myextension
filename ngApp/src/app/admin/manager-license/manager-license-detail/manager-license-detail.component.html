@@ -5,7 +5,7 @@
         <!-- general form elements -->
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">License Information</h3>
+            <h3 class="card-title">Thông tin chi tiết license</h3>
           </div>
           <!-- /.card-header -->
           <!-- form start -->
@@ -13,13 +13,13 @@
             <div class="card-body">
               <div class="row">
                 <div class="col-6">
-                  <label>Phone</label>
+                  <label>Số điện thoại</label>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fas fa-phone"></i></span>
                     </div>
                     <input name="phone" [(ngModel)]="license.phone" type="text" class="form-control"
-                      placeholder="Enter phone number">
+                      placeholder="Số điện thoại">
                   </div>
                 </div>
                 <div class="col-6">
@@ -29,7 +29,7 @@
                       <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                     </div>
                     <input name="email" [(ngModel)]="license.email" type="email" id="email" class="form-control"
-                      placeholder="Enter email">
+                      placeholder="Email">
                   </div>
                 </div>
               </div>
@@ -41,7 +41,7 @@
                       <span class="input-group-text"><i class="fas fa-user-shield"></i></span>
                     </div>
                     <input name="uuid" [(ngModel)]="license.uuid" type="text" class="form-control" id="uuid"
-                      placeholder="Enter UUID">
+                      placeholder="UUID">
                   </div>
                 </div>
                 <div class="col-6">
@@ -51,32 +51,32 @@
                       <span class="input-group-text"> <i class="fas fa-id-badge"></i></span>
                     </div>
                     <input name="licensekey" [(ngModel)]="license.licensekey" type="text" class="form-control"
-                      id="licensekey" placeholder="Enter license key">
+                      id="licensekey" placeholder="License key">
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-6">
                   <div class="form-group">
-                    <label for="fromdate">From date</label>
+                    <label for="fromdate">Từ ngày</label>
                     <div class="input-group mb-3">
                       <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-calendar"></i></span>
                       </div>
                       <input name="fromdate" [(ngModel)]="license.fromdate" type="text" class="form-control"
-                        id="fromdate" placeholder="Enter fromdate: mm/dd/yyyy h:mm a">
+                        id="fromdate" placeholder="mm/dd/yyyy h:mm a">
                     </div>
                   </div>
                 </div>
                 <div class="col-6">
                   <div class="form-group">
-                    <label for="todate">To date</label>
+                    <label for="todate">Đến ngày</label>
                     <div class="input-group mb-3">
                       <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-calendar"></i></span>
                       </div>
                       <input name="todate" [(ngModel)]="license.todate" type="text" class="form-control" id="todate"
-                        placeholder="Enter todate: mm/dd/yyyy h:mm a">
+                        placeholder="mm/dd/yyyy h:mm a">
                     </div>
                   </div>
                 </div>
@@ -85,7 +85,7 @@
                 <div class="col-6">
                   <div class="form-check">
                     <input [(ngModel)]="license.isactive" name="isactive" id="isactive" class="form-check-input" type="checkbox">
-                    <label for="isactive">Is active</label>
+                    <label for="isactive">Đang hoạt động</label>
                   </div>
                 </div>
               </div>
@@ -93,8 +93,9 @@
             <!-- /.card-body -->
 
             <div class="card-footer">
-              <button (click)="goBack()" type="button" class="btn btn-info btn-flat">Go to back list</button>
-              <button (click)="submit()" type="button" class="btn btn-primary btn-flat">Submit</button>
+              <button (click)="goBack()" type="button" class="btn btn-info btn-flat">Quay lại danh sách</button>
+              <button *ngIf="!license._id" (click)="submit()" type="button" class="btn btn-primary btn-flat">Lưu thông tin</button>
+              <button *ngIf="license._id" (click)="submit()" type="button" class="btn btn-primary btn-flat">Cập nhật</button>
             </div>
           </form>
         </div>

@@ -1,3 +1,6 @@
+const {
+    json
+} = require('body-parser');
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
@@ -89,12 +92,16 @@ router.get('/license', verifyToken, function (req, res) {
                             error: err.message
                         });
                     } else {
-                        res.json({count: count, docLicenses: docLicenses});
+                        res.json({
+                            count: count,
+                            docLicenses: docLicenses
+                        });
                     }
                 })
                 .skip((page - 1) * pageLength)
                 .limit(pageLength)
-                .sort(optionSort);
+                .sort(optionSort)
+                .select('phone uuid licensekey isactive');
         })
     } catch (ex) {
         res.json({
@@ -116,6 +123,48 @@ router.get('/license/:id', verifyToken, function (req, res) {
 
 })
 
+router.put('/license/isactive/:id', verifyToken, function (req, res) {
+    try {
+        db.License.findByIdAndUpdate(req.params.id, {
+            $set: {
+                isactive: req.body.isactive
+            }
+        }, {
+            "fields": {
+                "phone": 1,
+                "uuid": 1,
+                "licensekey": 1,
+                "isactive": 1
+            },
+            "new": true
+        }, function (err, updateLicense) {
+            if (err) {
+                res.json({
+                    error: err.message,
+                    mes: '',
+                });
+            } else {
+                let mes = "";
+                if (updateLicense.isactive === "true") {
+                    mes = "Kích hoạt License thành công!";
+                } else {
+                    mes = "Hủy kích hoạt License thành công!";
+                }
+                res.json({
+                    error: '',
+                    mes: mes,
+                    license: updateLicense,
+                });
+            }
+        })
+    } catch (ex) {
+        res.json({
+            error: ex.message,
+            mes: '',
+        });
+    }
+})
+
 router.post('/license', verifyToken, function (req, res) {
     try {
         let license = {
@@ -128,16 +177,24 @@ router.post('/license', verifyToken, function (req, res) {
             isactive: req.body.isactive,
             createdate: new Date().toISOString()
         }
-        db.License.create(license)
-            .then(docLicense => {
+        db.License.create(license, function(err, docLicense) {
+            if(err) {
                 res.json({
-                    _id: docLicense._id
+                    error: err,
+                    mes: ''
                 })
-            });
+            } else {
+                res.json({
+                    error: '',
+                    mes: 'Thêm mới thông tin license thành công!',
+                    license: docLicense
+                })
+            }
+        });
     } catch (ex) {
-        res.status(400);
         return res.json({
-            error: ex.message
+            error: ex.message,
+            mes: '',
         });
     }
 })
@@ -157,16 +214,23 @@ router.put('/license/:id', verifyToken, function (req, res) {
         }, {
             new: true
         }, (err, updateLicense) => {
-            if (!err) {
-                res.json(updateLicense);
+            if (err) {
+                res.json({
+                    error: err.message,
+                    mes: ''
+                });
             } else {
-                res.json(err.message);
+                res.json({
+                    error: '',
+                    mes: 'Cập nhật thông tin license thành công!',
+                    license: updateLicense,
+                });
             }
         });
     } catch (ex) {
-        res.status(400);
         res.json({
-            error: ex.message
+            error: ex.message,
+            mes: '',
         });
     }
 })
@@ -175,10 +239,15 @@ router.delete('/license/:id', verifyToken, function (req, res) {
     db.License.findByIdAndRemove(req.params.id, (err, docLicense) => {
         if (err) {
             res.json({
-                error: err.message
+                error: err.message,
+                mes: '',
             });
         } else {
-            res.json(docLicense);
+            res.json({
+                error: '',
+                mes: 'Xóa license thành công!',
+                license: docLicense,
+            });
         }
     })
 })
@@ -191,11 +260,11 @@ router.post('/login', (req, res) => {
     let userData = req.body;
     if (!userData || !userData.email) {
         res.json({
-            error: 'User information is empty!!!'
+            error: 'Không được bỏ trống thông tin người dùng!'
         });
         return;
     }
-    const errmessage = "The Username or Password is incorrect!"
+    const errmessage = "Thông tin tài khoản hoặc mật khẩu không chính xác!"
     db.User.findOne({
             email: userData.email
         },
@@ -222,6 +291,7 @@ router.post('/login', (req, res) => {
                 };
                 let token = jwt.sign(payload, SECRET_KEY);
                 res.json({
+                    error: '',
                     token: token
                 });
             }

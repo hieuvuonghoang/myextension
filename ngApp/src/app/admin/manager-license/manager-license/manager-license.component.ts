@@ -1,26 +1,45 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
 import { License } from 'src/app/models/license';
 import { LicenseService } from 'src/app/services/license.service';
 import { Utilitys } from 'src/app/utilitys/utilitys';
 import { Router, ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { ShareDataService } from 'src/app/services/share-data.service';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-manager-license',
   templateUrl: './manager-license.component.html',
-  styleUrls: ['./manager-license.component.css']
+  styleUrls: ['./manager-license.component.css'],
+  animations: [
+    trigger('flyInOut', [
+      state('in', style({ opacity: '1' })),
+      transition('void => *', [
+        style({ opacity: '0' }),
+        animate(500)
+      ]),
+    ]),
+  ]
 })
 export class ManagerLicenseComponent implements OnInit {
+  @HostBinding('@.disabled')
+  public animationsDisabled = false;
 
   licenses: License[] = [];
   pageLength: number = 10;
   paginations: string[] = [];
-  page: number = 0;
+  page: number = 1;
   pageCount: number = 0;
   field: string = "";
   sort: number = 0;
   indexPage: number = 0;
+
+  Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+  });
 
   constructor(
     private licenseService: LicenseService,
@@ -30,21 +49,20 @@ export class ManagerLicenseComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
     this.route.paramMap.subscribe(
       params => {
-        this.page = params.get('page') ? parseInt(params.get('page')!, 10) : 0;
+        this.page = params.get('page') ? parseInt(params.get('page')!, 10) : 1;
         this.field = params.get('field') ? params.get('field')! : '';
         this.sort = params.get('sort') ? parseInt(params.get('sort')!, 10) : 0;
         this.getLicences();
       }
     )
-
   }
 
   private getLicences() {
     this.licenseService.getLicense(this.page, this.pageLength, this.field, this.sort).subscribe(
       docs => {
+        this.animationsDisabled = true;
         this.pageCount = Math.floor(docs.count / this.pageLength);
         if ((docs.count % this.pageLength) !== 0) {
           this.pageCount += 1;
@@ -57,7 +75,9 @@ export class ManagerLicenseComponent implements OnInit {
           license = new License({ ...docs.docLicenses[i] });
           this.licenses.push(license);
         }
-        console.log(this.licenses);
+        setTimeout(() => {
+          this.animationsDisabled = false;
+        }, 0)
       }
     );
   }
@@ -75,48 +95,51 @@ export class ManagerLicenseComponent implements OnInit {
     let pageSel = n + this.page;
     if (pageSel > 0 && pageSel <= this.pageCount) {
       this.page = pageSel;
-      this.router.navigate(['manager-license', { page: pageSel, pageLength: this.pageLength, field: this.field, sort: this.sort }]);
+      this.router.navigate(['admin/manager-license', { page: pageSel, pageLength: this.pageLength, field: this.field, sort: this.sort }]);
     }
   }
 
   onSelectPage(page: string) {
     let pageSel = parseInt(page, 10);
     if (pageSel && pageSel !== this.page) {
-      this.router.navigate(['manager-license', { page: pageSel, pageLength: this.pageLength, field: this.field, sort: this.sort }]);
+      this.router.navigate(['admin/manager-license', { page: pageSel, pageLength: this.pageLength, field: this.field, sort: this.sort }]);
     }
   }
 
   lockOrUnlock(license: License) {
     let licenseTmp = new License({ ...JSON.parse(JSON.stringify(license)) });
-    let mes = "";
-    if (!licenseTmp.isactive) {
-      mes = "Vô hiệu hóa license thành công!";
-    } else {
-      mes = "Kích hoạt license thành công!";
-    }
     licenseTmp.isactive = !licenseTmp.isactive;
-    this.licenseService.putLicense(licenseTmp)
+    this.licenseService.putLicenseIsActive(licenseTmp)
       .subscribe(
         data => {
-          console.log(data);
-          license.isactive = licenseTmp.isactive;
-          let Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-          });
-          Toast.fire({
-            icon: 'warning',
-            title: mes
-          })
+          licenseTmp.isactive = data.license.isactive === "true" ? true : false;
+          let index = -1;
+          for (let i = 0; i < this.licenses.length; i++) {
+            if (this.licenses[i]._id === licenseTmp._id) {
+              index = i;
+              break;
+            }
+          }
+          this.licenses.splice(index, 1);
+          this.licenses.splice(index, 0, licenseTmp);
+          if (data.error) {
+            this.Toast.fire({
+              icon: 'error',
+              title: data.error
+            })
+          } else {
+            this.Toast.fire({
+              icon: 'success',
+              title: data.mes
+            })
+          }
         }
       )
   }
 
   edit(license: License) {
     this.shareDataService.previousURL.next(this.router.url);
-    this.router.navigate(['manager-license-detail', license._id]);
+    this.router.navigate(['admin/manager-license-detail', license._id]);
   }
 
   delete(license: License) {
@@ -129,41 +152,42 @@ export class ManagerLicenseComponent implements OnInit {
     })
 
     swalWithBootstrapButtons.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      title: 'Xác nhận xóa license?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, cancel!',
+      confirmButtonText: 'Đồng ý',
+      cancelButtonText: 'Hủy bỏ',
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
         this.licenseService.delLicense(license._id)
           .subscribe(data => {
-            console.log(data);
+            if (data.error) {
+              this.Toast.fire({
+                icon: 'error',
+                title: data.error
+              })
+            } else {
+              this.Toast.fire({
+                icon: 'success',
+                title: data.mes
+              })
+            }
             this.getLicences();
-            // this.router.navigate(['manager-license', { page: this.page, pageLength: this.pageLength, field: this.field, sort: this.sort }]);
-            swalWithBootstrapButtons.fire(
-              'Deleted!',
-              'Your file has been deleted.',
-              'success'
-            );
           })
       } else if (
-        /* Read more about handling dismissals below */
         result.dismiss === Swal.DismissReason.cancel
       ) {
-        // swalWithBootstrapButtons.fire(
-        //   'Cancelled',
-        //   'Your imaginary file is safe :)',
-        //   'error'
-        // )
+        this.Toast.fire({
+          icon: 'info',
+          title: 'Hủy bỏ hành động xóa license!'
+        })
       }
     })
   }
 
   createNew() {
-    this.router.navigate(['/manager-license-detail', ""]);
+    this.router.navigate(['admin/manager-license-detail', ""]);
   }
 
 }

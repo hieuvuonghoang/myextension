@@ -11,6 +11,7 @@ import { AuthService } from './services/auth.service';
 import { TokenInterceptorService } from './services/token-interceptor.service';
 
 import { FormsModule } from '@angular/forms';
+import { AuthModule } from './auth/auth.module';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { FormsModule } from '@angular/forms';
   imports: [
     BrowserModule,
     AdminModule,
+    AuthModule,
     FormsModule,
     BrowserAnimationsModule,
     HttpClientModule,

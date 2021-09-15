@@ -1,0 +1,37 @@
+<section class="login-page">
+  <div class="login-box">
+    <!-- /.login-logo -->
+    <div class="card card-outline card-primary">
+      <div class="card-header text-center">
+        <a href="#" class="h1"><b>Admin</b>LTE</a>
+      </div>
+      <div class="card-body">
+        <p class="login-box-msg">Đăng nhập hệ thống</p>
+        <form #userForm="ngForm" (ngSubmit)="onSubmit()">
+          <div class="input-group mb-3">
+            <input id="email" name="email" type="email" class="form-control" placeholder="Email"
+              [(ngModel)]="loginUserData.email" required #email="ngModel" [class.is-invalid]="email.invalid && email.touched">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-envelope"></span>
+              </div>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input id="pass" name="pass" type="password" class="form-control" placeholder="Password"
+              [(ngModel)]="loginUserData.pass" required #pass="ngModel" [class.is-invalid]="pass.invalid && pass.touched">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-lock"></span>
+              </div>
+            </div>
+          </div>
+          <button [disabled]="userForm.form.invalid" type="submit" class="btn btn-block btn-primary btn-block">Đăng nhập</button>
+        </form>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+  <!-- /.login-box -->
+</section>

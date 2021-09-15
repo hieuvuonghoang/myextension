@@ -20,7 +20,6 @@ export class LicenseService {
     return this.http.get<any>(this._apiUrl + `?page=${page}&pageLength=${pageLength}&field=${field}&sort=${sort}`)
       .pipe(
         map(data => {
-          console.log(data);
           if (data.docLicenses) {
             for (let i = 0; i < data.docLicenses.length; i++) {
               data.docLicenses[i].isactive = data.docLicenses[i].isactive === 'true' ? true : false;
@@ -50,6 +49,10 @@ export class LicenseService {
 
   postLicense(license: License): Observable<any> {
     return this.http.post<any>(this._apiUrl, license);
+  }
+
+  putLicenseIsActive(license: License): Observable<any> {
+    return this.http.put<any>(`${this._apiUrl}/isactive/${license._id}`, {isactive: license.isactive});
   }
 
 }

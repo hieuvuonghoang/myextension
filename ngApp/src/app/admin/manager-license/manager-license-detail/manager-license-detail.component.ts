@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { License } from 'src/app/models/license';
 import { LicenseService } from 'src/app/services/license.service';
@@ -61,7 +61,7 @@ export class ManagerLicenseDetailComponent implements OnInit {
     } else {
       this.Toast.fire({
         icon: 'info',
-        title: 'Không thực hiện cập nhật khi thông tin không thay đổi!'
+        title: 'Không có bất kỳ thông tin nào thay đổi để thực hiện cập nhật!'
       })
     }
   }
@@ -70,12 +70,19 @@ export class ManagerLicenseDetailComponent implements OnInit {
     this.licenseService.postLicense(this.license)
       .subscribe(
         data => {
-          this.license._id = data._id;
-          this.licenseRoot = new License(JSON.parse(JSON.stringify(this.license)));
-          this.Toast.fire({
-            icon: 'success',
-            title: 'Tạo mới license thành công'
-          })
+          if(data.error) {
+            this.Toast.fire({
+              icon: 'error',
+              title: data.error,
+            })
+          } else {
+            this.license._id = data.license._id;
+            this.licenseRoot = new License(JSON.parse(JSON.stringify(this.license)));
+            this.Toast.fire({
+              icon: 'success',
+              title: data.mes,
+            })
+          }
         }, err => {
           this.Toast.fire({
             icon: 'error',
@@ -89,11 +96,18 @@ export class ManagerLicenseDetailComponent implements OnInit {
     this.licenseService.putLicense(this.license)
       .subscribe(
         data => {
-          this.licenseRoot = new License(JSON.parse(JSON.stringify(this.license)));
-          this.Toast.fire({
-            icon: 'success',
-            title: 'Cập nhật thông tin license thành công'
-          })
+          if(data.error) {
+            this.Toast.fire({
+              icon: 'error',
+              title: data.error,
+            })
+          } else {
+            this.licenseRoot = new License(JSON.parse(JSON.stringify(this.license)));
+            this.Toast.fire({
+              icon: 'success',
+              title: data.mes,
+            })
+          }
         }, err => {
           this.Toast.fire({
             icon: 'error',

@@ -33,7 +33,6 @@ export class ManagerLicenseDetailResolverService implements Resolve<License>{
         take(1),
         mergeMap(data => {
           if (data) {
-            console.log(data);
             license = new License({ ...data });
             return of(license);
           } else {

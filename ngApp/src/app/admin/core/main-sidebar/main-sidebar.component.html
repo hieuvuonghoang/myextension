@@ -19,39 +19,25 @@
         </div>
       </div>
 
-      <!-- SidebarSearch Form -->
-      <div class="form-inline">
-        <div class="input-group" data-widget="sidebar-search">
-          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-sidebar">
-              <i class="fas fa-search fa-fw"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                  with font-awesome or any other icon font library -->
-          <li class="nav-header">EXAMPLES</li>
+          <li class="nav-header">Quản lý</li>
           <li class="nav-item">
-            <a [routerLink]="['manager-license']" class="nav-link">
+            <a [routerLink]="['manager-license']" routerLinkActive="active" class="nav-link">
               <i class="nav-icon fas fa-id-badge"></i>
               <p>
-                License Manager
-                <span class="right badge badge-danger">New</span>
+                Quản lý license
               </p>
             </a>
           </li>
           <li class="nav-item">
-            <a [routerLink]="['manager-user']" class="nav-link">
+            <a [routerLink]="['manager-user']" routerLinkActive="active" class="nav-link">
               <i class="nav-icon fas fa-users"></i>
               <p>
-                User Manager
-                <span class="right badge badge-danger">New</span>
+                Quản lý người dùng
               </p>
             </a>
           </li>
