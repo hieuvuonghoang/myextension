@@ -7,8 +7,8 @@ function functionB() {
     eval("@JSXBIN@ES@2.0@MyBbyBnABMAbyBn0ABJBnAEjzFjBjMjFjSjUBfRBFeTiNjJjTjTjJjPjOhAjDjPjNjQjMjFjUjFhBhBhBff0DzMjSjVjOiGjVjOjDjUjJjPjOiCCACBJEnAEjzPjDjBjMjMiCjBjDjLiGjVjDjUjJjPjODfRBjCfff0DzAEByB");
 }
 
-function runFunctionB() {
-    alert('Mission complete!!!');
+function getInforUUID() {
+    return getOSUUID();
 }
 
 //#region Check License

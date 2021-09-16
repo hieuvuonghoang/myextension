@@ -18,3 +18,11 @@ function processBtn2() {
         // alert(result);
     });
 }
+
+var getInforUUID = (function() {
+    csInterface.evalScript('getInforUUID()', function (result) {
+        document.querySelector('#showUUID').value = result;
+    });
+});
+
+getInforUUID();
