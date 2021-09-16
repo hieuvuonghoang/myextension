@@ -10,7 +10,7 @@
         <form #userForm="ngForm" (ngSubmit)="onSubmit()">
           <div class="input-group mb-3">
             <input id="email" name="email" type="email" class="form-control" placeholder="Email"
-              [(ngModel)]="loginUserData.email" required #email="ngModel" [class.is-invalid]="email.invalid && email.touched">
+              [(ngModel)]="loginUserData.email" required #email="ngModel" [class.is-invalid]="email.invalid && (email.touched || email.dirty)">
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-envelope"></span>
@@ -19,7 +19,7 @@
           </div>
           <div class="input-group mb-3">
             <input id="pass" name="pass" type="password" class="form-control" placeholder="Password"
-              [(ngModel)]="loginUserData.pass" required #pass="ngModel" [class.is-invalid]="pass.invalid && pass.touched">
+              [(ngModel)]="loginUserData.pass" required #pass="ngModel" [class.is-invalid]="pass.invalid && (pass.touched || pass.dirty)">
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>

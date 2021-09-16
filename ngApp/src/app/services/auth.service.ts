@@ -29,7 +29,7 @@ export class AuthService {
 
   logOutUser() {
     localStorage.removeItem('token')
-    this.router.navigate(['events'])
+    this.router.navigate(['/login'])
   }
 
 }
