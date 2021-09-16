@@ -34,7 +34,7 @@ function callBackFuction(functionName) {
             //Lần đầu kích hoạt
             if (firstAddLicenseKey(results[1])) {
                 setLicenseKey(results[1]);
-                alert('Kích hoạt thành công ứng dụng!\n\nCảm ơn bạn đã ủng hộ vào quỹ phòng chống Covid 2.000(VNĐ)!');
+                alert('Kích hoạt License Key thành công!');
             }
             //Thực hiện chương trình!
             ret = functionName();
@@ -42,9 +42,21 @@ function callBackFuction(functionName) {
             //Require License
             alert('Require License');
             removeLicenseKey();
+        }
+        else if (results[0] === "-3") {
+            alert('Lỗi máy chủ, vui lòng liên hệ với quản trị viên!');
+            removeLicenseKey();
+        }
+        else if (results[0] === "4") {
+            alert('UUID chưa được cấp license, vui lòng liên hệ với quản trị viên!');
+            removeLicenseKey();
+        }
+        else if (results[0] === "5") {
+            alert('License bị khóa, vui lòng liên hệ với quản trị viên!');
+            removeLicenseKey();
         } else {
             //Xảy ra lỗi bên trong
-            alert(results[1]);
+            alert(results[1] + ". Vui lòng liên hệ với quản trị viên!");
             removeLicenseKey();
         }
     } catch (ex) {
@@ -62,7 +74,7 @@ function requestAPI() {
             return "-2#Require License Key!";
         }
         var host = "14.232.208.178:2111";
-        var api = host + "/api/license?uuid=" + uuid + "&key=" + licenseKey;
+        var api = host + "/api/check-license?uuid=" + uuid + "&key=" + licenseKey;
         var reply = "";
         var conn = new Socket();
         if (conn.open(host, "binary")) {
@@ -70,10 +82,13 @@ function requestAPI() {
             conn.write(context);
             reply = conn.read(999999);
             conn.close();
+            //-3: Lỗi máy chủ
             //0: Không tồn tại license
             //1: Còn hiệu lực
             //2: Hết hiệu lực
-            //3: Không chính chủ
+            //3: License không chính chủ
+            //4: UUID chưa được cấp license
+            //5: License bị khóa
             reply = reply.split('#')[1];
             if (reply === undefined) {
                 return "-1#Máy chủ không phản hồi yêu cầu. Vui lòng liên hệ với quản trị viên!";
@@ -131,7 +146,7 @@ function getLicenseKey() {
         result = fileKey.read();
         fileKey.close();
     } else {
-        result = prompt("UUID System: " + uuid + "\n\nVới mỗi license bạn đã góp phần ủng hộ vào quỹ phòng chống Covid 2.000(VNĐ)!", "");
+        result = prompt("UUID System: " + uuid);
     }
     return result;
 }

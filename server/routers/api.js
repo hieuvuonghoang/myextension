@@ -301,15 +301,48 @@ router.post('/login', (req, res) => {
 //#endregion
 
 router.get('/check-license', function (req, res) {
-    let mac = req.query.mac;
+    let uuid = req.query.uuid;
     let key = req.query.key;
-    console.log(mac);
+    console.log(uuid);
     console.log(key);
+    //-3: Lỗi máy chủ
     //0: Không tồn tại license
     //1: Còn hiệu lực
     //2: Hết hiệu lực
     //3: License không chính chủ
-    res.send('#1');
+    //4: UUID chưa được cấp license
+    //5: License bị khóa
+    if(!uuid || !key) {
+        res.send('#-3');
+        return;
+    }
+    db.License.findOne({uuid: uuid}, function(err, docLicense) {
+        if(err) {
+            res.send('#-3');
+        } else {
+            if(docLicense === null) {
+                res.send('#4');
+            } else {
+                if(docLicense.licensekey !== key) {
+                    res.send('#0');
+                } else {
+                    if(docLicense.isactive !== 'true') {
+                        res.send('#5');
+                    } else {
+                        let toDate = Date.parse(docLicense.todate);
+                        let currentDate = Date.parse(new Date());
+                        console.log(toDate);
+                        console.log(currentDate);
+                        if(toDate >= currentDate) {
+                            res.send('#1');
+                        } else {
+                            res.send('#2');
+                        }
+                    }
+                }
+            }
+        }
+    })
 })
 
 module.exports = router
